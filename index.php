@@ -105,60 +105,62 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && !empty($_GET["u"])) {
         return $content;
     }
 
+    $json = @json_decode(get_content_from_github("https://api.github.com/users/" . $_GET["u"] . "/repos"), true);
+
+    if ($json == false) {
+        die("<div class='nothing'>Rate limit reached.</div>");
+    }
+
+    $langs = array();
+    $c = 0;
+
+    
+    foreach ($json as $repo) {
+        $c++;
+        $jsonLUrl = @json_decode(get_content_from_github($repo["languages_url"]), true);
+        if ($jsonLUrl == false) {
+            die("<div class='nothing'>Rate limit reached.</div>");
+        }
+        array_push($langs, $jsonLUrl);
+    }
+
     echo "<h1>" . $_GET["u"] . "</h1>";
-
-    try {
-        $json = json_decode(get_content_from_github("https://api.github.com/users/" . $_GET["u"] . "/repos"), true);
     
-        $langs = array();
-        $c = 0;
+    $langsFiltered = array();
     
-        
-        foreach ($json as $repo) {
-            $c++;
-            array_push($langs, json_decode(get_content_from_github($repo["languages_url"]), true));
+    $lc = 0;
+    for ($i = 0; $i < count($langs); $i++) {
+        foreach ($langs[$i] as $j => $p) {
+            $langsFiltered[$j] += $p;
+            $lc += $p;
         }
-        
-        $langsFiltered = array();
-        
-        $lc = 0;
-        for ($i = 0; $i < count($langs); $i++) {
-            foreach ($langs[$i] as $j => $p) {
-                $langsFiltered[$j] += $p;
-                $lc += $p;
-            }
-        }
+    }
 
-        $langPercentage = array();
-        foreach ($langsFiltered as $i => $j) {
-            $langPercentage[$i] = (($j / $lc) * 100);
-        }
-        echo "<style type='text/css'>";
-        foreach ($langPercentage as $i => $j) {
-            echo "." . str_replace("#", "S", $i) . " {  width: " . $j . "%  }";
-        }
-        echo "</style>";
+    $langPercentage = array();
+    foreach ($langsFiltered as $i => $j) {
+        $langPercentage[$i] = (($j / $lc) * 100);
+    }
+    echo "<style type='text/css'>";
+    foreach ($langPercentage as $i => $j) {
+        echo "." . str_replace("#", "S", $i) . " {  width: " . $j . "%  }";
+    }
+    echo "</style>";
 
 ?>
         </header>
         <div id="app">
             <div id="langbar">
 <?php
-        
-        foreach ($langsFiltered as $i => $j) {
-            echo "<div class='langpart " . str_replace("#", "S", $i) . "'></div>";
-        }
+    foreach ($langsFiltered as $i => $j) {
+        echo "<div class='langpart " . str_replace("#", "S", $i) . "'></div>";
+    }
 ?>
             </div>
 <?php
-        foreach ($langsFiltered as $i => $j) {
-            echo "<div class='entry'><span class='lang'>" . $i . "</span><span class='count'>" . $j . " bytes</span></div>";
-        }
-        echo "<br/>Out of " . $c . " repositories, and a total of " . $lc . " bytes of code.";
-        
-    } catch (Exception $e) {
-        echo $e->getMessage();
+    foreach ($langsFiltered as $i => $j) {
+        echo "<div class='entry'><span class='lang'>" . $i . "</span><span class='count'>" . $j . " bytes</span></div>";
     }
+    echo "<br/>Out of " . $c . " repositories, and a total of " . $lc . " bytes of code.";
 } else {
     echo "<div class='nothing'>No username given.</div>";
 }
