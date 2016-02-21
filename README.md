@@ -1,7 +1,7 @@
 # GitHub User Languages
 Displays the entirety of programming languages used by a given GitHub user, as well as their proportions.
 
-* Live demo **[here](http://matheus.avellar.c9.io/lang)**
+* Live demo **[here](http://avellar.ml/repos)**
 
 Usage: example.com/repos**?u=GitHubUsername**
 
