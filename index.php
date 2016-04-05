@@ -65,6 +65,7 @@
             background-color: #fefefe;
             color: #1e1e1e;
             padding: 10px 20px;
+            font-family: "PT Sans", sans-serif;
         }
         li {
             list-style-type: none;
