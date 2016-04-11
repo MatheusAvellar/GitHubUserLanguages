@@ -11,6 +11,6 @@ Due to rate limiting on the GitHub API, it cannot be used many times in a row; I
 
 <hr>
 
-In case the rate limit has been reached, here's what it looks like:
+In case the rate limit has been reached and you can't see the demo, here's what it should have looked like:
 
 ![Image](http://i.imgur.com/ixYarBL.png)
