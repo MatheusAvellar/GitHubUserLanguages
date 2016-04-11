@@ -13,4 +13,4 @@ Due to rate limiting on the GitHub API, it cannot be used many times in a row; I
 
 In case the rate limit has been reached, here's what it looks like:
 
-![Image](http://i.imgur.com/LRmDhLG.png)
+![Image](http://i.imgur.com/ixYarBL.png)
